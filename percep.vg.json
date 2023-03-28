@@ -1,0 +1,127 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Perceptron!",
+  "width": 400,
+  "height": 400,
+  "padding": 5,
+
+  "signals": [
+
+    {
+      "name": "w1",
+      "value": 0,
+      "bind": {"input": "range", "max":1, "min":-1},
+      "init": "0"
+    },
+
+    {
+      "name": "w2",
+      "value": 0,
+      "bind": {"input": "range", "max":1, "min":-1},
+      "init": "0"
+    },
+
+    {
+      "name": "bias",
+      "value": 0,
+      "bind": {"input": "range", "max":1, "min":-1},
+      "init":"0"
+    }
+
+
+  ],
+
+  "data": [
+    {
+      "name": "table"
+    },
+    {
+      "name": "linevals",
+      "values": [
+        {"x": 0, "y": 0, "c":0}, {"x": 0.25, "y": 0, "c":0},
+        {"x": 0.5, "y": 0, "c":0}, {"x": 0.75, "y": 0, "c":0},
+        {"x": 1, "y": 0, "c":0}, {"x": 1.25, "y": 0, "c":0},
+        {"x": 1.5, "y": 0, "c":0}, {"x": 1.75, "y": 0, "c":0},
+        {"x": 2, "y": 0, "c":0}, {"x": 2.25, "y": 0, "c":0},
+        {"x": 2.5, "y": 0, "c":0}, {"x": 2.75, "y": 0, "c":0},
+        {"x": 3, "y": 0, "c":0}, {"x": 3.25, "y": 0, "c":0},
+        {"x": 3.5, "y": 0, "c":0}, {"x": 3.75, "y": 0, "c":0},
+        {"x": 4, "y": 0, "c":0}, {"x": 4.25, "y": 0, "c":0},
+        {"x": 4.5, "y": 0, "c":0}, {"x": 4.75, "y": 0, "c":0},
+        {"x": 5, "y": 0, "c":0}
+      ],
+      "transform": [
+        {"type": "formula", "as": "y", "expr": "(-(bias / w2) / (bias/w1))*datum.x + (-bias / w2)"}
+      ]
+    }
+      
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "range": "width",
+      "zero": true,
+      "domain": [0,5]
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "zero": true,
+      "domain": [0,5]
+    },
+    {
+      "name": "colors",
+      "type": "ordinal",
+      "domain": [1, 2],
+      "range": ["#d5855a", "#6c4e97"]
+    }
+  ],
+
+  "axes": [
+    {"orient": "bottom", "scale": "x", "domain": false, "ticks":false},
+    {"orient": "left", "domain":false, "scale": "y"}
+  ],
+
+  "marks": [
+    {
+      "type":"line",
+      "from": {"data": "linevals"},
+      "encode": {
+        "update":{
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "interpolate": "linear"
+
+        }
+      }
+    },
+    {
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "series",
+          "data": "table",
+          "groupby": "c"
+        }
+      },
+      "marks":[
+    {
+      "type":"symbol",
+      "from": {"data": "series"},
+      "encode":{
+        "update":{
+          "x": {"scale": "x", "field": "x"},
+          "y": {"scale": "y", "field": "y"},
+          "shape": {"value": "circle"},
+          "fill":{"scale":"colors","field":"c"},
+          "stroke":{"scale":"colors","field":"c"}
+        }
+      }
+    }
+  ]
+}
+]
+}

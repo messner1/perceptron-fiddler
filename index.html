@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<style>
+  .row {
+    padding-bottom: 40px !important;
+    padding-top: 40px !important;
+  }
+  h1 {
+    padding-bottom: 15px !important;
+  }
+
+  img { width: 100%; height: auto; }
+
+</style>
+
+
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@5"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> The Perceptron </title>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <div class="container">
+    <div class = "row">
+      <div class ="col-md-6">
+        <h1> The Perceptron </h1>
+        <p> Created by Cornell University professor Frank Rosenblatt in 1958, the original perceptron consisted of a binary input layer, a series of hidden neurons with potentiometer-adjustable weights, and an output layer. Rosenblatt used the Mark-1 Perceptron to demonstrate that even such a seemingly trivial machine could be "trained" to perform image identification tasks. He spun this result into a theory of perception described in his 1962 monograph <em>Principles of Neurodynamics</em>.</p>
+      <p>
+        A single-layer perceptron is ultimately a straightforward computational engine. At its most basic, a single layer perceptron consists of an input layer, with a number of "neurons" equal to the number of dimensions in the input dataset, a "hidden" layer of neurons that take in a weighted version of all these inputs and compose them using a particular "activation function" and potentially an output layer that composes the output of all of the hidden neurons. The model is trained by adjusting the weighting of the inputs to each of the hidden layer neurons.
+      </p>
+
+      <p>
+        To put it even more simply, a single layer perceptron learns by changing the inputs to a known function, resident in each hidden layer neuron, by an adjustable weighting value. This is most often done by using some sort training algorithm that guides the direction and magnitude of the changes in the weights based off of the success of the model at classifying datapoints found in a preclassified training dataset. In Rosenblatt's case, this process was actuated physically using electric motors to change the value of potentiometers.
+      </p>
+      <p>
+        However, what if instead of training a model in this automated fashion, feeding it training data and watching it minimize its error, we were to do it ourselves with immediate visual feedback? This is where the notion of a <em>decision boundary</em> becomes central.
+      </p>
+      </div>
+    <div class ="col-md-6">
+      <img src = "percep.svg" alt="Perceptron"/>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class ="col-md-6">
+      <div id="vis"></div>
+    </div>
+    <div class="col-md-6">
+      <h2>The Decision Boundary</h2>
+      <p>The visualization on the left is a plot of a number of datapoints collected from a hypothetical real world experiment. Each point is characterized by a 2 dimensional tensor, plotted here as a cartesian X,Y axis. These datapoints could be anything -- say the width and height of a sampling of human hands, or the rating of a movie given by two different critics. The data ranges in value from 0 to 5 across both of its dimensions and, critically, has been seperated into two classes, one denoted by <span style="color:#6c4e97">purple</span> coloration and the other by <span style="color:#d5855a">orange</span>. </p>
+      <p>Your task is to serve as the learning function of the perceptron. The weights of the inputs to the perceptron hidden layer (as well as the bias, a weight that is always "on") are adjustable using the sliders below the plot. The manipulation of these weights are visualized by the line placed on the plot. This line is the <em>decision boundary</em>. The decision boundary should seperate the points into two groups, orange and purple, as cleanly and sharply as possible. </p>
+  </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Classifying New Data</h2>
+      <p> If the decision boundary cleanly seperate the classes, you have effectively trained this perceptron. The values of the weights can now be used to be classify further data into one of the two classes. The interface at the right allows you to see this process in action. Use the sliders to define a new datapoint by picking an x and a y value. Simply based off your visual inspection of the plot, how should this new datapoint be classified?</p>
+      <p> Pressing the "classify" button will calculate the classification of your new point according to the weights you selected during the training process. The calculation of the weighted inputs (so your new point * your two weights, summed) and the result of the activation function are displayed above the button. How was your new point classified in actuality?</p>
+    </div>
+    <div class="col-md-6">
+      <label for="id1" style="padding-top:45px">Input 1 (x)</label>
+      <input type="range" id="id1" name="id1" max=5 min=0 step=0.1>
+      <p>Value: <output id="v1"></output></p>
+      <label for="id2">Input 2 (y)</label>
+      <input type="range" id="id2" name="id2" max=5 min=0 step=0.1>
+      <p>Value: <output id="v2"></output></p>
+
+     
+     <p><strong>Weight Calculation (w1*in1 + w2*in2 + 1*bias):</strong> <output id="w_out"></output></p>
+     <p><strong>Heaviside Function (1 if weight calculation > 0, else 0):</strong> <output id="h_out"></output></p>
+     <p><strong>Classification: </strong><output id="class_out"></output></p>
+     <button id="classify">Classify!</button>
+
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div id="vis2"></div>
+    </div>
+
+    <div class="col-md-6">
+      <h2>The Limits of Perception</h2>
+      <p>This plot, like the one above, records a different sample of datapoints with two dimensions x and y. However, their distribution on the decision plane is different than in our first classification task. How might you describe their geometry?</p>
+      <p>As before, use the weight sliders to position your decision boundary. Are you able to produce a clean boundary between the two classes?</p>
+      <p>In fact, a one layer perceptron is only able to distinguish linearly seperable classes -- that is classes that can be split by a linear-function goverened decision boundary. This was shown by Minksy and Papert in their 1970 book <em>Perceptrons</em>. Minsky and Papert also speculated that this was true of perceptrons in general, no matter how many layers they employed (how to actually train such models was also obscure at the time, and required the later elucidation of an algorithm known as stochastic gradiant descent). We now know this to be wrong -- but why might they have come to this conclusion?</p>
+    </div>
+  </div>
+</div>
+  
+  <script>
+
+    var d1 = [
+        {"x": 1, "y": 1, "c":1}, {"x": 2, "y": 2, "c":1}, {"x": 4, "y": 4.5, "c":1},{"x": 1.5, "y": 1, "c":1},{"x": 3.5, "y": 1, "c":1},{"x": 4.5, "y": 2, "c":1},{"x": 0.5, "y": 5, "c":1},
+        {"x": 4, "y": 0.25, "c":2}, {"x": 5, "y": 1, "c":2}, {"x": 5, "y": 0.5, "c":2}
+      ]
+
+    var d2 = [ {"x": 2, "y": 2, "c": 1}, {"x": 3, "y": 3, "c": 1}, {"x": 1.7, "y": 1.5, "c": 1}, {"x": 4, "y": 3, "c": 1}, {"x": 4.5, "y": 2, "c": 1}, {"x": 3.7, "y": 2.5, "c": 1}, {"x": 3.3, "y": 2.2, "c": 1}, 
+      {"x": 1.1, "y": 1.1, "c": 1}, {"x": 2.3, "y": 2.6, "c": 1}, {"x": 2.7, "y": 2.9, "c": 1}, {"x": 3.4, "y": 2.9, "c": 1},
+      {"x": 2.7, "y": 2, "c": 2}, {"x": 3, "y": 1.5, "c": 2}, {"x": 2.5, "y": 1.5, "c": 2}, {"x": 3.1, "y": 1.2, "c": 2}, {"x": 3.0, "y": 2.5, "c": 2}, {"x": 2.5, "y": 2.4, "c": 2}
+      ]
+    
+
+    const spec = "percep.vg.json";
+  	v1 = vegaEmbed("#vis", spec)
+      // result.view provides access to the Vega View API
+      .then(result => result.view
+        .renderer('svg')
+        .insert("table",  d1)
+        .run())
+      .catch(console.warn);
+
+
+    v2 = vegaEmbed("#vis2", spec)
+      // result.view provides access to the Vega View API
+      .then(result => result.view
+        .renderer('svg')
+        .insert("table",  d2)
+        .run())
+      .catch(console.warn);
+
+
+
+    const value = document.querySelector("#v1")
+    const input = document.querySelector("#id1")
+
+    const value2 = document.querySelector("#v2")
+    const input2 = document.querySelector("#id2")
+
+    const classify_button = document.querySelector("#classify")
+    const classify_out = document.querySelector("#class_out")
+
+    const w_out = document.querySelector("#w_out")
+    const h_out = document.querySelector("#h_out")
+
+
+    value.textContent = input.value
+    input.addEventListener("input", (event) => {
+      value.textContent = event.target.value
+    })
+
+    value2.textContent = input2.value
+    input2.addEventListener("input", (event) => {
+      value2.textContent = event.target.value
+    })
+
+    classify_button.onclick = function(){
+      w1 = Number(document.getElementsByName("w1")[0].value)
+      w2 = Number(document.getElementsByName("w2")[0].value)
+      bias = Number(document.getElementsByName("bias")[0].value)
+      console.log(w1, w2, bias)
+
+      w_calc = (w1*input.value + w2*input2.value + 1*bias)
+      w_out.textContent = w_calc
+      if (w_calc > 0){
+        h_out.textContent = "1"
+        classify_out.textContent = "Purple"
+      }
+      else {
+        h_out.textContent = "0"
+        classify_out.textContent = "Orange"
+      }
+      
+    }
+
+  </script>
+</body>
